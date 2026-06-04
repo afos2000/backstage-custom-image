@@ -8,8 +8,11 @@ RUN npx --yes @backstage/create-app@0.8.3 --skip-install
 
 RUN find backstage -maxdepth 1 -mindepth 1 -exec mv {} . \; && rmdir backstage
 
-RUN YARN_ENABLE_STRICT_ENGINES=0 yarn install
-RUN YARN_ENABLE_STRICT_ENGINES=0 yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-oidc-provider
+RUN sed -i 's/"plugins\/\*"[,\s]*//' package.json && \
+    sed -i 's/"node": "22 || 24"/"node": "20 || 22 || 24"/' package.json
+
+RUN yarn install
+RUN yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-oidc-provider
 
 FROM node:20-bookworm-slim AS packages
 
