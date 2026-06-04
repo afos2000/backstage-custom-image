@@ -35,6 +35,8 @@ COPY --from=packages --chown=node:node /app/.yarnrc.yml ./
 RUN yarn install
 
 COPY --chown=node:node tsconfig.json ./
+COPY --chown=node:node packages/backend/tsconfig.json ./packages/backend/tsconfig.json
+COPY --chown=node:node packages/app/tsconfig.json ./packages/app/tsconfig.json
 COPY --chown=node:node packages/backend/src ./packages/backend/src
 COPY --chown=node:node packages/backend/config.d.ts ./packages/backend/config.d.ts
 COPY --chown=node:node packages/app/src ./packages/app/src
