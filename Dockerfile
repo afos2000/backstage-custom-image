@@ -1,12 +1,21 @@
+FROM node:20-bookworm-slim AS skeleton
+
+WORKDIR /app
+RUN corepack enable
+
+ENV BACKSTAGE_APP_NAME=backstage
+RUN npx --yes @backstage/create-app@0.8.3 --skip-install
+
+RUN find backstage -maxdepth 1 -mindepth 1 -exec mv {} . \; && rmdir backstage
+
+RUN yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-oidc-provider
+
 FROM node:20-bookworm-slim AS packages
 
 WORKDIR /app
-COPY backstage.json package.json ./
-COPY .yarnrc.yml ./
-
-COPY packages packages
-
-RUN find packages \! -name "package.json" -mindepth 2 -maxdepth 2 -exec rm -rf {} \+
+COPY --from=skeleton /app/package.json /app/backstage.json /app/yarn.lock /app/.yarnrc.yml ./
+COPY --from=skeleton /app/packages/backend/package.json ./packages/backend/
+COPY --from=skeleton /app/packages/app/package.json ./packages/app/
 
 FROM node:20-bookworm-slim AS build
 
@@ -34,7 +43,10 @@ COPY --from=packages --chown=node:node /app/.yarnrc.yml ./
 
 RUN yarn install
 
-COPY --chown=node:node . .
+COPY --chown=node:node packages/backend/src ./packages/backend/src
+COPY --chown=node:node packages/backend/config.d.ts ./packages/backend/config.d.ts
+COPY --chown=node:node packages/app/src ./packages/app/src
+COPY --chown=node:node app-config*.yaml ./
 
 RUN yarn tsc
 RUN yarn --cwd packages/backend build
