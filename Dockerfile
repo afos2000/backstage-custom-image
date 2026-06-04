@@ -1,9 +1,5 @@
 FROM node:20-bookworm-slim AS skeleton
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3 g++ build-essential libsqlite3-dev && \
-    rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 RUN corepack enable
 
@@ -14,8 +10,8 @@ RUN find backstage -maxdepth 1 -mindepth 1 -exec mv {} . \; && rmdir backstage
 
 RUN node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('package.json','utf8'));d.workspaces=d.workspaces.filter(w=>w!=='plugins/*');d.engines.node='20 || 22 || 24';fs.writeFileSync('package.json',JSON.stringify(d,null,2)+'\n')"
 
-RUN yarn install
-RUN yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-oidc-provider
+RUN yarn install --ignore-scripts
+RUN yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-oidc-provider --ignore-scripts
 
 FROM node:20-bookworm-slim AS packages
 
