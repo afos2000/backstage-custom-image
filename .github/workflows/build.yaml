@@ -11,7 +11,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: backstage
-  BACKSTAGE_VERSION: "1.36.1"
+  BACKSTAGE_VERSION: "1.51.0"
 
 jobs:
   build:
