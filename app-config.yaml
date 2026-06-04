@@ -1,0 +1,46 @@
+app:
+  title: AndresKube Homelab Services
+  baseUrl: http://localhost:7007
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+  cors:
+    origin: http://localhost:7007
+
+auth:
+  environment: development
+  providers:
+    oidc:
+      development:
+        metadataUrl: http://localhost:8080/realms/backstage/.well-known/openid-configuration
+        clientId: backstage
+        clientSecret: ${KEYCLOAK_CLIENT_SECRET}
+        callbackUrl: http://localhost:7007/api/auth/oidc/handler/frame
+        signIn:
+          resolvers:
+            - resolver: emailMatchingUserEntityProfileEmail
+
+techdocs:
+  builder: local
+  generator:
+    runIn: local
+  publisher:
+    type: local
+
+catalog:
+  locations: []
+  rules:
+    - allow:
+      - Component
+      - API
+      - Group
+      - User
+      - Resource
+      - System
+      - Location
+      - Template

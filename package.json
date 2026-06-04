@@ -1,0 +1,35 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "20 || 22"
+  },
+  "scripts": {
+    "dev": "yarn workspaces foreach -A -p -v --include backend --include app run start",
+    "build": "backstage-cli repo build",
+    "tsc": "tsc",
+    "prettier:check": "prettier --check .",
+    "prettier:write": "prettier --write .",
+    "lint": "backstage-cli repo lint",
+    "clean": "backstage-cli repo clean"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/app",
+      "packages/backend"
+    ]
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.31.1",
+    "@backstage/repo-tools": "^0.16.0",
+    "prettier": "^3.0.0"
+  },
+  "resolutions": {
+    "express": "^4.18.0",
+    "react": "^18.0.2",
+    "react-dom": "^18.0.2",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0"
+  }
+}
