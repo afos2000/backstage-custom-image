@@ -8,13 +8,7 @@ RUN npx --yes @backstage/create-app@0.8.3 --skip-install
 
 RUN find backstage -maxdepth 1 -mindepth 1 -exec mv {} . \; && rmdir backstage
 
-RUN node -e "
-const fs = require('fs');
-const d = JSON.parse(fs.readFileSync('package.json','utf8'));
-d.workspaces = d.workspaces.filter(w => w !== 'plugins/*');
-d.engines.node = '20 || 22 || 24';
-fs.writeFileSync('package.json', JSON.stringify(d, null, 2) + '\n');
-"
+RUN node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('package.json','utf8'));d.workspaces=d.workspaces.filter(w=>w!=='plugins/*');d.engines.node='20 || 22 || 24';fs.writeFileSync('package.json',JSON.stringify(d,null,2)+'\n')"
 
 RUN yarn install
 RUN yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-oidc-provider
