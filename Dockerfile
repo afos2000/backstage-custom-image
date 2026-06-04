@@ -1,5 +1,9 @@
 FROM node:20-bookworm-slim AS skeleton
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3 g++ build-essential libsqlite3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 RUN corepack enable
 
