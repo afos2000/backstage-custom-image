@@ -51,7 +51,7 @@ const keycloakAuthApi = ApiBlueprint.make({
           provider: {
             id: 'oidc',
             title: 'Keycloak',
-            icon: () => null,
+            icon: () => React.createElement('span', null),
           },
           defaultScopes: ['openid', 'profile', 'email'],
         }),
