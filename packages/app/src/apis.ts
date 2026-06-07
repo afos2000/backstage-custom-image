@@ -1,1 +1,0 @@
-export { keycloakAuthApiRef } from './App';
