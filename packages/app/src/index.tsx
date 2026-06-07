@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom/client';
 import app from './App';
 
-export default app;
+ReactDOM.createRoot(document.getElementById('root')!).render(app.createRoot());
