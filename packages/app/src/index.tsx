@@ -1,3 +1,3 @@
 import app from './App';
 
-app.start();
+export default app;
