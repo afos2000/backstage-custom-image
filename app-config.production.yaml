@@ -7,18 +7,8 @@ backend:
     port: 7007
   security:
     headers:
-      contentSecurityPolicy:
-        directives:
-          defaultSrc: ["'self'"]
-          scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"]
-          styleSrc: ["'self'", "'unsafe-inline'", "https:"]
-          imgSrc: ["'self'", "data:", "https:"]
-          connectSrc: ["'self'", "https:"]
-          fontSrc: ["'self'", "https:", "data:"]
-          workerSrc: ["'self'", "blob:"]
-          objectSrc: ["'none'"]
-          frameAncestors: ["'self'"]
-          upgradeInsecureRequests: false
+      contentSecurityPolicy: false
+
   database:
     client: pg
     connection:
