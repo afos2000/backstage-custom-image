@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   createApiRef,
   createFrontendModule,
@@ -17,7 +18,7 @@ import { SignInPageBlueprint } from '@backstage/plugin-app-react';
 import { SignInPage } from '@backstage/core-components';
 import { createApp } from '@backstage/frontend-defaults';
 
-const keycloakAuthApiRef = createApiRef<
+export const keycloakAuthApiRef = createApiRef<
   OpenIdConnectApi & ProfileInfoApi & BackstageIdentityApi & SessionApi
 >().with({
   id: 'auth.keycloak',

@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim AS packages
+FROM node:22-bookworm-slim AS packages
 
 WORKDIR /app
 COPY backstage.json package.json ./
@@ -8,7 +8,7 @@ COPY packages packages
 
 RUN find packages \! -name "package.json" -mindepth 2 -maxdepth 2 -exec rm -rf {} \+
 
-FROM node:20-bookworm-slim AS build
+FROM node:22-bookworm-slim AS build
 
 ENV PYTHON=/usr/bin/python3
 
@@ -24,7 +24,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get install -y --no-install-recommends libsqlite3-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN corepack enable
+RUN corepack enable && \
+    mkdir -p /home/node/.cache/node && \
+    chown -R node:node /home/node/.cache
 
 USER node
 WORKDIR /app
@@ -44,12 +46,13 @@ COPY --chown=node:node app-config*.yaml ./
 
 RUN yarn tsc
 RUN yarn --cwd packages/backend build
+RUN yarn --cwd packages/app build
 
 RUN mkdir packages/backend/dist/skeleton packages/backend/dist/bundle \
     && tar xzf packages/backend/dist/skeleton.tar.gz -C packages/backend/dist/skeleton \
     && tar xzf packages/backend/dist/bundle.tar.gz -C packages/backend/dist/bundle
 
-FROM node:20-bookworm-slim
+FROM node:22-bookworm-slim
 
 ENV PYTHON=/usr/bin/python3
 
@@ -65,7 +68,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get install -y --no-install-recommends libsqlite3-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN corepack enable
+RUN corepack enable && \
+    mkdir -p /home/node/.cache/node && \
+    chown -R node:node /home/node/.cache
 
 USER node
 WORKDIR /app
@@ -78,6 +83,7 @@ RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid
     yarn workspaces focus --all --production && rm -rf "$(yarn cache clean)"
 
 COPY --from=build --chown=node:node /app/packages/backend/dist/bundle/ ./
+COPY --from=build --chown=node:node /app/packages/app/dist ./packages/app/dist
 COPY --chown=node:node app-config*.yaml ./
 
 ENV NODE_ENV=production

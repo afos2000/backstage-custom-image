@@ -19,7 +19,6 @@ backend.add(import('@backstage/plugin-search-backend'));
 backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 backend.add(import('@backstage/plugin-search-backend-module-pg'));
 backend.add(import('@backstage/plugin-search-backend-module-techdocs'));
-backend.add(import('@backstage/plugin-search-backend-node'));
 backend.add(import('@backstage/plugin-signals-backend'));
 backend.add(import('@backstage/plugin-techdocs-backend'));
 
